@@ -5,7 +5,7 @@
 
 #define MAX 300000000
 
-// pgcc -acc -Minfo=accel -o main parallelPrimes.c -lm
+// pgcc -acc -Minfo=accel -o main parallelPrimes.c -lm OBS: isso se for nvidia.
 // pgg: o compilador da nvidia para C, tanto pra cuda como acc.
 // -acc Habilita a aceleração com OpenACC.
 // -Minfo=accel mostra quais partes do código foram paralelizadas e quais otimizacoes foram usadas
