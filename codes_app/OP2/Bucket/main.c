@@ -84,14 +84,14 @@ int readFile(const char *filename, float **array) {
     int n = 0;
     while (fscanf(file, "%f", &(*array)[n]) == 1) {
         n++;
-        *array = realloc(*array, sizeof(float) * (n + 1));
+        *array = (float*)realloc(*array, sizeof(float) * (n + 1));
     }
     fclose(file);
     return n;
 }
 
 int main() {
-    float *array = malloc(sizeof(float) * 1);
+    float *array = (float*)malloc(sizeof(float) * 1);
     const char *filename = "dados.txt";  // Substitua pelo nome do seu arquivo
 
     int n = readFile(filename, &array);
