@@ -17,6 +17,7 @@ int main() {
         fprintf(stderr, "Erro na alocação de memória\n");
         return 1;
     }
+    double start = acc_get_wtime(); 
 
   /* Create an array of values, where '1' indicates that a number is prime.
    * Start by assuming all numbers are prime by setting them to 1.
@@ -55,8 +56,10 @@ int main() {
             count++;
         }
     }
-    
+    double end = acc_get_wtime(); 
+    double executionTime = (end - start) * 1000.0; 
     printf("There were %d primes up to %d\n", count, MAX);
+    printf("Parallel execution time: %.2f ms\n", executionTime);
 
     free(primes);
     return 0;
