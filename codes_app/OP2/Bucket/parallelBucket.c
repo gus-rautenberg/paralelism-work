@@ -32,7 +32,10 @@ void insertionSort(float bucket[], int n) {
 }
 
 // Função para realizar o bucket sort
-void bucketSort(float array[], int n) {
+void bucketSort(float array[], int n, int num_threads) {
+    // Configurar o número de threads
+    omp_set_num_threads(num_threads);
+
     // Encontrar o valor máximo no array
     float max = findMax(array, n);
 
@@ -134,38 +137,44 @@ int main() {
         }
 
         double soma_tempo = 0.0;
-        // Executa o bucket sort REPETICOES vezes
-        for (int rep = 0; rep < REPETICOES; rep++) {
-            // Cria uma cópia do array original para cada execução
-            float *array = (float*)malloc(sizeof(float) * n);
-            if (array == NULL) {
-                perror("Erro na alocação de memória para o array de execução");
-                break;
+        // Executa o bucket sort REPETICOES vezes para 4, 8 e 10 threads
+        for (int threads = 4; threads <= 10; threads += 4) {
+            printf("Executando com %d threads...\n", threads);
+            // Executa o bucket sort REPETICOES vezes
+            for (int rep = 0; rep < REPETICOES; rep++) {
+                // Cria uma cópia do array original para cada execução
+                float *array = (float*)malloc(sizeof(float) * n);
+                if (array == NULL) {
+                    perror("Erro na alocação de memória para o array de execução");
+                    break;
+                }
+                for (int i = 0; i < n; i++) {
+                    array[i] = original[i];
+                }
+
+                // Medir o tempo de execução com paralelização
+                double startTime = omp_get_wtime();
+                bucketSort(array, n, threads);
+                double endTime = omp_get_wtime();
+
+                soma_tempo += (endTime - startTime);
+                free(array);
             }
-            for (int i = 0; i < n; i++) {
-                array[i] = original[i];
+
+            double media_tempo = soma_tempo / REPETICOES;
+
+            // Cria o arquivo de saída com o tempo médio de execução
+            char outpath[256];
+            snprintf(outpath, sizeof(outpath), "%s_paralized_threads_%d.txt", entry->d_name, threads);
+            FILE *outfile = fopen(outpath, "w");
+            if (outfile == NULL) {
+                printf("Erro ao criar o arquivo %s\n", outpath);
+            } else {
+                fprintf(outfile, "Tempo médio de execução do bucket sort paralelizado com %d threads (em %d execuções): %f segundos\n", threads, REPETICOES, media_tempo);
+                fclose(outfile);
             }
 
-            // Medir o tempo de execução com paralelização
-            double startTime = omp_get_wtime();
-            bucketSort(array, n);
-            double endTime = omp_get_wtime();
-
-            soma_tempo += (endTime - startTime);
-            free(array);
-        }
-
-        double media_tempo = soma_tempo / REPETICOES;
-
-        // Cria o arquivo de saída com o tempo médio de execução, com sufixo "paralized"
-        char outpath[256];
-        snprintf(outpath, sizeof(outpath), "%s_paralized.txt", entry->d_name);
-        FILE *outfile = fopen(outpath, "w");
-        if (outfile == NULL) {
-            printf("Erro ao criar o arquivo %s\n", outpath);
-        } else {
-            fprintf(outfile, "Tempo médio de execução do bucket sort paralelizado (em %d execuções): %f segundos\n", REPETICOES, media_tempo);
-            fclose(outfile);
+            soma_tempo = 0.0; // Resetar para o próximo número de threads
         }
 
         free(original);
