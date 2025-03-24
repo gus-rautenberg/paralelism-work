@@ -80,8 +80,8 @@ int main()
 
 void InitParticles( Particle particles[], ParticleV pv[], int npart )
 {
-    #pragma omp parallel for
-    for (int i=0; i<npart; i++) {
+    int i;
+    for (i=0; i<npart; i++) {
 	particles[i].x	  = Random();
 	particles[i].y	  = Random();
 	particles[i].z	  = Random();
@@ -100,7 +100,6 @@ double ComputeForces( Particle myparticles[], Particle others[], ParticleV pv[],
   double max_f;
   int i;
   max_f = 0.0;
-  #pragma omp parallel for reduction(max:max_f)
   for (i=0; i<npart; i++) {
     int j;
     double xi, yi, mi, rx, ry, mj, r, fx, fy, rmin;
@@ -138,8 +137,6 @@ double ComputeNewPos( Particle particles[], ParticleV pv[], int npart, double ma
   a0	 = 2.0 / (dt * (dt + dt_old));
   a2	 = 2.0 / (dt_old * (dt + dt_old));
   a1	 = -(a0 + a2);
-
-  #pragma omp parallel for reduction(max:max_f)
   for (i=0; i<npart; i++) {
     double xi, yi;
     xi	           = particles[i].x;
