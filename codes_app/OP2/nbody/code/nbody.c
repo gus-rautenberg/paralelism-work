@@ -2,6 +2,8 @@
 #include <stdio.h>
 #include <string.h>
 #include <math.h>
+#include <omp.h>
+
 
 /*
  * pRNG based on http://www.cs.wm.edu/~va/software/park/park.html
@@ -50,7 +52,7 @@ double ComputeNewPos( Particle [], ParticleV [], int, double);
 
 int main()
 {
-    double time;
+    double time_start, time_end, elapsed_time;
     Particle  * particles;   /* Particles */
     ParticleV * pv;          /* Particle velocity */
     int         npart, i, j;
@@ -59,10 +61,15 @@ int main()
     int tmp;
     tmp = fscanf(stdin,"%d\n",&npart);
     tmp = fscanf(stdin,"%d\n",&cnt);
-/* Allocate memory for particles */
+
+    /* Capture the start time */
+    time_start = omp_get_wtime();
+
+    /* Allocate memory for particles */
     particles = (Particle *) malloc(sizeof(Particle)*npart);
     pv = (ParticleV *) malloc(sizeof(ParticleV)*npart);
-/* Generate the initial values */
+
+    /* Generate the initial values */
     InitParticles( particles, pv, npart);
     sim_t = 0.0;
 
@@ -73,8 +80,19 @@ int main()
       /* Once we have the forces, we compute the changes in position */
       sim_t += ComputeNewPos( particles, pv, npart, max_f);
     }
+
     for (i=0; i<npart; i++)
       fprintf(stdout,"%.5lf %.5lf %.5lf\n", particles[i].x, particles[i].y, particles[i].z);
+
+    /* Capture the end time */
+    time_end = omp_get_wtime();
+
+    /* Calculate the elapsed time */
+    elapsed_time = time_end - time_start;
+
+    /* Print the elapsed time */
+    printf("Execution Time: %lf seconds\n", elapsed_time);
+
     return 0;
 }
 
