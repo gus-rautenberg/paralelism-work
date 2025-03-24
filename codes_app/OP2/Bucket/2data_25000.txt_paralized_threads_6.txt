@@ -1,0 +1,1 @@
+Tempo médio de execução do bucket sort paralelizado com 6 threads (em 10 execuções): 0.006950 segundos

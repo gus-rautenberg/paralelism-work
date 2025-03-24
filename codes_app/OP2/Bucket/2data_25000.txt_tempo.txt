@@ -1,1 +1,0 @@
-Tempo médio de execução do bucket sort (em 10 execuções): 0.010775 segundos

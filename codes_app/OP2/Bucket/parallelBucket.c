@@ -138,7 +138,7 @@ int main() {
 
         double soma_tempo = 0.0;
         // Executa o bucket sort REPETICOES vezes para 4, 8 e 10 threads
-        for (int threads = 4; threads <= 10; threads += 4) {
+        for (int threads = 4; threads <= 10; threads += 2) {
             printf("Executando com %d threads...\n", threads);
             // Executa o bucket sort REPETICOES vezes
             for (int rep = 0; rep < REPETICOES; rep++) {
