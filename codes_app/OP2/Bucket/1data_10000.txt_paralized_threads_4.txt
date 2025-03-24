@@ -1,1 +1,1 @@
-Tempo médio de execução do bucket sort paralelizado com 4 threads (em 10 execuções): 0.002750 segundos
+Tempo médio de execução do bucket sort paralelizado com 4 threads (em 10 execuções): 0.002101 segundos

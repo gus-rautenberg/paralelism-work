@@ -1,1 +1,1 @@
-Tempo médio de execução do bucket sort paralelizado com 8 threads (em 10 execuções): 0.078581 segundos
+Tempo médio de execução do bucket sort paralelizado com 8 threads (em 10 execuções): 0.079009 segundos
